@@ -14,6 +14,8 @@ jobs:
       - uses: dfinity/setup-dfx@main
 
       - name: Generate new identity
+        env:
+          GH_TOKEN: ${{ secrets.TEMP_PAT }}
         run: |
           # Generate a new identity
           dfx identity new temp-identity --disable-encryption || true
@@ -29,14 +31,7 @@ jobs:
 
           # Export the identity PEM
           IDENTITY_PEM=$(dfx identity export temp-identity)
-          echo "IDENTITY_PEM<<EOF" >> $GITHUB_ENV
-          echo "$IDENTITY_PEM" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
 
-      - name: Set organization secret
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
           # Set the IDENTITY_PEM as an organization secret
           echo "$IDENTITY_PEM" | gh secret set IDENTITY_PEM --org ${{ github.repository_owner }} --visibility all --body -
 
