@@ -7,10 +7,7 @@ jobs:
   setup-identity:
     runs-on: ubuntu-latest
     steps:
-      - name: Install DFX
-        run: |
-          sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
-          echo "$HOME/.local/share/dfx/bin" >> $GITHUB_PATH
+      - uses: dfinity/setup-dfx@main
 
       - name: Generate new identity
         run: |
