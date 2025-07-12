@@ -3,6 +3,10 @@ name: Setup DFX Identity
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+  id-token: write
+
 jobs:
   setup-identity:
     runs-on: ubuntu-latest
