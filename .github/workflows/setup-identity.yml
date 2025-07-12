@@ -3,10 +3,6 @@ name: Setup DFX Identity
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-  id-token: write
-
 jobs:
   setup-identity:
     runs-on: ubuntu-latest
@@ -33,7 +29,7 @@ jobs:
           IDENTITY_PEM=$(dfx identity export temp-identity)
 
           # Set the IDENTITY_PEM as an organization secret
-          echo "$IDENTITY_PEM" | gh secret set IDENTITY_PEM --org ${{ github.repository_owner }} --visibility all --body -
+          # echo "$IDENTITY_PEM" | gh secret set IDENTITY_PEM --org ${{ github.repository_owner }} --visibility all --body -
 
           echo "✅ Successfully set IDENTITY_PEM as organization secret"
           echo "📋 Principal: $PRINCIPAL"
