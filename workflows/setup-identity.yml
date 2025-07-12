@@ -1,0 +1,48 @@
+name: Setup DFX Identity
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-identity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install DFX
+        run: |
+          sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
+          echo "$HOME/.local/share/dfx/bin" >> $GITHUB_PATH
+
+      - name: Generate new identity
+        run: |
+          # Generate a new identity
+          dfx identity new temp-identity --disable-encryption || true
+
+          # Switch to the new identity
+          dfx identity use temp-identity
+
+          # Get the principal
+          PRINCIPAL=$(dfx identity get-principal)
+          echo "Generated Principal: $PRINCIPAL"
+          echo "PRINCIPAL=$PRINCIPAL" >> $GITHUB_ENV
+
+          # Export the identity PEM
+          IDENTITY_PEM=$(dfx identity export temp-identity)
+          echo "IDENTITY_PEM<<EOF" >> $GITHUB_ENV
+          echo "$IDENTITY_PEM" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Set organization secret
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Set the IDENTITY_PEM as an organization secret
+          echo "$IDENTITY_PEM" | gh secret set IDENTITY_PEM --org ${{ github.repository_owner }} --visibility public --body -
+
+          echo "✅ Successfully set IDENTITY_PEM as organization secret"
+          echo "📋 Principal: $PRINCIPAL"
+          echo "📋 Principal: $PRINCIPAL" >> $GITHUB_STEP_SUMMARY
+
+      - name: Cleanup
+        run: |
+          # Clean up the temporary identity
+          dfx identity remove temp-identity || true
