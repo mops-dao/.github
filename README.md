@@ -2,6 +2,9 @@
 
 ## GitHub identity
 
+- Principal: `6btvq-iqtba-hqxjf-t3qsx-ibayx-rkdgt-347cw-k6rqq-wf53n-6n47v-5ae`
+- Generated: https://github.com/mops-dao/.github/actions/runs/16238244358
+
 GitHub identity is used to deploy the canisters to the Internet Computer from the GitHub Actions.
 
 ### Setup GitHub identity secret
